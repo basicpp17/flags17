@@ -4,7 +4,7 @@ Project {
     minimumQbsVersion: "1.7.1"
 
     StaticLibrary {
-        name: "flags"
+        name: "000_meta"
         Depends { name: "cpp" }
         cpp.cxxLanguageVersion: "c++17"
         cpp.includePaths: ["."]
@@ -17,10 +17,6 @@ Project {
         }
 
         files: [
-            "bitnumber/BitNumberFlags.cpp",
-            "bitnumber/Flags.h",
-            "classic/ClassicFlags.cpp",
-            "classic/Flags.h",
             "meta/Name.cpp",
             "meta/Name.h",
             "meta/check.cpp",
@@ -37,14 +33,7 @@ Project {
             "meta/ValueList.h",
             "meta/details/BitStorage.cpp",
             "meta/details/BitStorage.h",
-            "repeated/Flags.h",
-            "repeated/RepeatedFlags.cpp",
-            "tagtype/Flags.h",
-            "tagtype/TagTypeFlags.cpp",
-            "tagvalue/Flags.h",
-            "tagvalue/TagValueFlags.cpp",
         ]
-
         Export {
             Depends { name: "cpp" }
             cpp.cxxLanguageVersion: "c++17"
@@ -62,9 +51,53 @@ Project {
         }
     }
 
+    StaticLibrary {
+        name: "002_classic"
+        Depends { name: "000_meta" }
+        files: [
+            "classic/ClassicFlags.cpp",
+            "classic/Flags.h",
+        ]
+    }
+
+    StaticLibrary {
+        name: "003_bitnumber"
+        Depends { name: "000_meta" }
+        files: [
+            "bitnumber/BitNumberFlags.cpp",
+            "bitnumber/Flags.h",
+        ]
+    }
+
+    StaticLibrary {
+        name: "004_tagtype"
+        Depends { name: "000_meta" }
+        files: [
+            "tagtype/Flags.h",
+            "tagtype/TagTypeFlags.cpp",
+        ]
+    }
+    StaticLibrary {
+        name: "005_tagvalue"
+        Depends { name: "000_meta" }
+        files: [
+            "tagvalue/Flags.h",
+            "tagvalue/TagValueFlags.cpp",
+        ]
+    }
+
+    StaticLibrary {
+        name: "006_repeated"
+        Depends { name: "000_meta" }
+        files: [
+            "repeated/Flags.h",
+            "repeated/RepeatedFlags.cpp",
+        ]
+    }
+
     Application {
         name: "flags_tests"
-        Depends { name: "flags" }
+        Depends { name: "004_tagtype" }
         consoleApplication: true
         Depends { name: "Qt.testlib" }
 
@@ -76,7 +109,11 @@ Project {
     Application {
         name: "flags_app"
         consoleApplication: true
-        Depends { name: "flags" }
+        Depends { name: "002_classic" }
+        Depends { name: "003_bitnumber" }
+        Depends { name: "004_tagtype" }
+        Depends { name: "005_tagvalue" }
+        Depends { name: "006_repeated" }
         files: [
             "main.cpp",
         ]
