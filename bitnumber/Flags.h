@@ -109,15 +109,15 @@ struct Flags {
     }
 
     template<class B>
-    constexpr auto operator|=(B b) const noexcept -> This & {
+    constexpr auto operator|=(B b) noexcept -> This & {
         return *this = set(b);
     }
     template<class B>
-    constexpr auto operator&=(B b) const noexcept -> This & {
+    constexpr auto operator&=(B b) noexcept -> This & {
         return *this = mask(b);
     }
     template<class B>
-    constexpr auto operator^=(B b) const noexcept -> This & {
+    constexpr auto operator^=(B b) noexcept -> This & {
         return *this = flip(b);
     }
 
@@ -152,7 +152,7 @@ auto operator<<(Out &out, Flags<T> f)
 {
     using flags_type = Flags<T>;
     if (f == flags_type{}) return out << "<None>";
-    f.each_set([&, first = true ](T t) mutable {
+    f.each_set([&, first = true](T t) mutable {
         if (!first)
             out << " | ";
         else

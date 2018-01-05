@@ -181,21 +181,21 @@ struct Flags {
     }
 
     template<class B>
-    constexpr auto operator|=(B b) const noexcept -> This & {
+    constexpr auto operator|=(B b) noexcept -> This & {
         return *this = set(b);
     }
     template<class B>
-    constexpr auto operator&=(B b) const noexcept -> This & {
+    constexpr auto operator&=(B b) noexcept -> This & {
         return *this = mask(b);
     }
     template<class B>
-    constexpr auto operator^=(B b) const noexcept -> This & {
+    constexpr auto operator^=(B b) noexcept -> This & {
         return *this = flip(b);
     }
 
     template<class F>
     constexpr void each(F &&f) const noexcept {
-        options.each([&, ff = std::forward<F>(f) ](auto value) mutable {
+        options.each([&, ff = std::forward<F>(f)](auto value) mutable {
             auto flag = value.template to<Flag>();
             ff(flag, (*this)[flag]);
         });
@@ -256,7 +256,7 @@ template<class Out, auto... A>
 auto operator<<(Out &out, Flags<A...> t) -> Out & {
     using Flags = Flags<A...>;
     if (t == Flags{}) return out << "<None>";
-    t.each_set([&, first = true ](auto f) mutable {
+    t.each_set([&, first = true](auto f) mutable {
         if (!first)
             out << " | ";
         else
