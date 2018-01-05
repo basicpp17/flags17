@@ -55,7 +55,7 @@ Project {
         name: "002_classic"
         Depends { name: "000_meta" }
         files: [
-            "classic/ClassicFlags.cpp",
+            "classic/Flags.cpp",
             "classic/Flags.h",
         ]
     }
@@ -64,7 +64,7 @@ Project {
         name: "003_bitnumber"
         Depends { name: "000_meta" }
         files: [
-            "bitnumber/BitNumberFlags.cpp",
+            "bitnumber/Flags.cpp",
             "bitnumber/Flags.h",
         ]
     }
@@ -73,16 +73,16 @@ Project {
         name: "004_tagtype"
         Depends { name: "000_meta" }
         files: [
+            "tagtype/Flags.cpp",
             "tagtype/Flags.h",
-            "tagtype/TagTypeFlags.cpp",
         ]
     }
     StaticLibrary {
         name: "005_tagvalue"
         Depends { name: "000_meta" }
         files: [
+            "tagvalue/Flags.cpp",
             "tagvalue/Flags.h",
-            "tagvalue/TagValueFlags.cpp",
         ]
     }
 
@@ -90,17 +90,23 @@ Project {
         name: "006_repeated"
         Depends { name: "000_meta" }
         files: [
+            "repeated/Flags.cpp",
             "repeated/Flags.h",
-            "repeated/RepeatedFlags.cpp",
         ]
     }
 
     Application {
         name: "flags_tests"
+        Depends { name: "Qt.testlib" }
         Depends { name: "004_tagtype" }
         consoleApplication: true
-        Depends { name: "Qt.testlib" }
-
+        // Qt.core exports conflicting settings (see QBS-1225)
+        Depends { name: "cpp" }
+        cpp.cxxLanguageVersion: "c++17"
+        cpp.includePaths: ["."]
+        cpp.cxxStandardLibrary: {
+            if (qbs.toolchain.contains('clang')) return "libc++";
+        }
         files: [
             "flagstest.cpp"
         ]
@@ -109,6 +115,7 @@ Project {
     Application {
         name: "flags_app"
         consoleApplication: true
+        Depends { name: "000_meta" }
         Depends { name: "002_classic" }
         Depends { name: "003_bitnumber" }
         Depends { name: "004_tagtype" }
